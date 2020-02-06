@@ -1,58 +1,63 @@
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { Hero } from './hero';
-import { HeroService } from './hero.service'
+import { HeroService } from './hero.service';
 
 @Component({
-  moduleId: module.id,
   selector: 'my-heroes',
-  templateUrl: 'heroes.component.html',
-  styleUrls: ['heroes.component.css'],
-  providers: [HeroService]
-
+  templateUrl: './heroes.component.html',
+  styleUrls: ['./heroes.component.css']
 })
 export class HeroesComponent implements OnInit {
-	heroes: Hero[];
-	selectedHero: Hero;
+  heroes: Hero[];
+  selectedHero: Hero;
+  addingHero = false;
+  error: any;
+  showNgFor = false;
 
-	constructor(private router: Router, private heroService: HeroService){ }
+  constructor(private router: Router, private heroService: HeroService) {}
 
-	ngOnInit(): void {
-	  this.getHeroes();
+  getHeroes(): void {
+    this.heroService
+      .getHeroes()
+      .subscribe(
+        heroes => (this.heroes = heroes),
+        error => (this.error = error)
+      )
   }
 
-	getHeroes(): void {
-	  this.heroService.getHeroes().then(heroes => this.heroes = heroes);
+  addHero(): void {
+    this.addingHero = true;
+    this.selectedHero = null;
   }
 
-	onSelect(hero: Hero): void {
-		this.selectedHero = hero;
-	}
-
-	gotoDetail(): void {
-	  this.router.navigate(['/detail', this.selectedHero.id]);
+  close(savedHero: Hero): void {
+    this.addingHero = false;
+    if (savedHero) {
+      this.getHeroes();
+    }
   }
 
-  add(name: string): void {
-    name = name.trim();
-    if(!name) { return; }
-    this.heroService.create(name)
-      .then(hero => {
-        this.heroes.push(hero);
+  deleteHero(hero: Hero, event: any): void {
+    event.stopPropagation();
+    this.heroService.delete(hero).subscribe(res => {
+      this.heroes = this.heroes.filter(h => h !== hero);
+      if (this.selectedHero === hero) {
         this.selectedHero = null;
-      });
+      }
+    }, error => (this.error = error));
   }
 
-  delete(hero: Hero): void {
-	  this.heroService
-      .delete(hero.id)
-      .then(() => {
-	      this.heroes = this.heroes.filter(h => h !== hero);
-	      if(this.selectedHero === hero) {
-	        this.selectedHero = null;
-        }
-      });
+  ngOnInit(): void {
+    this.getHeroes();
+  }
+
+  onSelect(hero: Hero): void {
+    this.selectedHero = hero;
+    this.addingHero = false;
+  }
+
+  gotoDetail(): void {
+    this.router.navigate(['/detail', this.selectedHero.id]);
   }
 }
