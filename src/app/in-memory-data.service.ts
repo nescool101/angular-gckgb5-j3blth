@@ -1,16 +1,16 @@
 export class InMemoryDataService {
   createDb() {
     const heroes = [
-      { id: 11, name: 'Mr. Nice' },
-      { id: 12, name: 'Narco' },
-      { id: 13, name: 'Bombasto' },
-      { id: 14, name: 'Celeritas' },
-      { id: 15, name: 'Magneta' },
-      { id: 16, name: 'RubberMan' },
-      { id: 17, name: 'Dynama' },
-      { id: 18, name: 'Dr IQ' },
-      { id: 19, name: 'Magma' },
-      { id: 20, name: 'Tornado' }
+      { id: 11, name: 'Nescao' },
+      { id: 12, name: 'Leonardo' },
+      { id: 13, name: 'Andres' },
+      { id: 14, name: 'Claudia' },
+      { id: 15, name: 'Laila' },
+      { id: 16, name: 'derek' },
+      { id: 17, name: 'lance' },
+      { id: 18, name: 'camilo' },
+      { id: 19, name: 'quemadito' },
+      { id: 20, name: 'Test' }
     ];
     return { heroes };
   }
